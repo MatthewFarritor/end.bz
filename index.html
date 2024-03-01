@@ -12,7 +12,7 @@
 
     #movingImage {
       position: absolute;
-      transition: transform 0.5s ease-out;
+      transition: transform 1s ease-out;
     }
   </style>
 </head>
@@ -31,14 +31,16 @@
       let deltaX = Math.random() > 0.5 ? 1 : -1;
       let deltaY = Math.random() > 0.5 ? 1 : -1;
 
+      const speed = 2; // Adjust this value to control the speed
+
       moveImage();
 
       function moveImage() {
-        // Update position based on current direction
-        currentX += deltaX * 10;
-        currentY += deltaY * 10;
+        // Update position based on current direction and speed
+        currentX += deltaX * speed;
+        currentY += deltaY * speed;
 
-        // Check for collisions with window edges and change direction
+        // Check for collisions with window edges and reverse direction
         if (currentX < 0 || currentX + imageWidth > window.innerWidth) {
           deltaX *= -1;
         }
