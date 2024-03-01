@@ -1,1 +1,34 @@
-test
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
+
+    #movingImage {
+      position: absolute;
+      animation: spinAndBounce 4s infinite;
+    }
+
+    @keyframes spinAndBounce {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+      }
+      50% {
+        transform: translateY(-50vh) rotate(360deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <img id="movingImage" src="your-image-source.jpg" alt="Spinning and Bouncing Image">
+  <script>
+    // You can optionally add JavaScript to dynamically change image source, size, etc.
+  </script>
+</body>
+</html>
