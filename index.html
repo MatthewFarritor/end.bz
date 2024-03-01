@@ -12,51 +12,35 @@
 
     #movingImage {
       position: absolute;
-      transition: transform 1s ease-out;
+      animation: spinAndBounce 4s infinite, bounceAround 8s infinite;
+    }
+
+    @keyframes spinAndBounce {
+      0%, 100% {
+        transform: rotate(0deg);
+      }
+      50% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes bounceAround {
+      0%, 100% {
+        transform: translate(0, 0);
+      }
+      25% {
+        transform: translate(calc(100vw - 100%), 0);
+      }
+      50% {
+        transform: translate(calc(100vw - 100%), calc(100vh - 100%));
+      }
+      75% {
+        transform: translate(0, calc(100vh - 100%));
+      }
     }
   </style>
 </head>
 <body>
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const movingImage = document.getElementById("movingImage");
-      const imageWidth = movingImage.width;
-      const imageHeight = movingImage.height;
-
-      // Set initial random position within the visible window area
-      let currentX = Math.random() * (window.innerWidth - imageWidth);
-      let currentY = Math.random() * (window.innerHeight - imageHeight);
-
-      // Set initial random direction
-      let deltaX = Math.random() > 0.5 ? 1 : -1;
-      let deltaY = Math.random() > 0.5 ? 1 : -1;
-
-      const speed = 2; // Adjust this value to control the speed
-
-      moveImage();
-
-      function moveImage() {
-        // Update position based on current direction and speed
-        currentX += deltaX * speed;
-        currentY += deltaY * speed;
-
-        // Check for collisions with window edges and reverse direction
-        if (currentX < 0 || currentX + imageWidth > window.innerWidth) {
-          deltaX *= -1;
-        }
-        if (currentY < 0 || currentY + imageHeight > window.innerHeight) {
-          deltaY *= -1;
-        }
-
-        // Apply new position and rotation
-        movingImage.style.transform = `translate(${currentX}px, ${currentY}px) rotate(360deg)`;
-
-        // Repeat the process with requestAnimationFrame for smooth animation
-        requestAnimationFrame(moveImage);
-      }
-    });
-  </script>
-
   <!-- Set width and height attributes for the image -->
   <img id="movingImage" src="ENDFACE.png" alt="Spinning and Bouncing Image" width="100" height="100">
 </body>
