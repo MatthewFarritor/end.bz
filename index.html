@@ -12,22 +12,7 @@
 
     #movingImage {
       position: absolute;
-      animation: bounceAround 4s infinite;
-    }
-
-    @keyframes bounceAround {
-      0%, 100% {
-        transform: translate(0, 0);
-      }
-      25% {
-        transform: translate(calc(100vw - 100%), 0);
-      }
-      50% {
-        transform: translate(calc(100vw - 100%), calc(100vh - 100%));
-      }
-      75% {
-        transform: translate(0, calc(100vh - 100%));
-      }
+      transition: transform 0.5s ease-out;
     }
   </style>
 </head>
@@ -35,13 +20,38 @@
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       const movingImage = document.getElementById("movingImage");
+      const imageWidth = movingImage.width;
+      const imageHeight = movingImage.height;
 
       // Set initial random position within the visible window area
-      const initialX = Math.random() * (window.innerWidth - movingImage.width);
-      const initialY = Math.random() * (window.innerHeight - movingImage.height);
+      let currentX = Math.random() * (window.innerWidth - imageWidth);
+      let currentY = Math.random() * (window.innerHeight - imageHeight);
 
-      movingImage.style.left = initialX + "px";
-      movingImage.style.top = initialY + "px";
+      // Set initial random direction
+      let deltaX = Math.random() > 0.5 ? 1 : -1;
+      let deltaY = Math.random() > 0.5 ? 1 : -1;
+
+      moveImage();
+
+      function moveImage() {
+        // Update position based on current direction
+        currentX += deltaX * 10;
+        currentY += deltaY * 10;
+
+        // Check for collisions with window edges and change direction
+        if (currentX < 0 || currentX + imageWidth > window.innerWidth) {
+          deltaX *= -1;
+        }
+        if (currentY < 0 || currentY + imageHeight > window.innerHeight) {
+          deltaY *= -1;
+        }
+
+        // Apply new position
+        movingImage.style.transform = `translate(${currentX}px, ${currentY}px)`;
+
+        // Repeat the process with requestAnimationFrame for smooth animation
+        requestAnimationFrame(moveImage);
+      }
     });
   </script>
 
