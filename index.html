@@ -26,9 +26,19 @@
   </style>
 </head>
 <body>
-  <img id="movingImage" src="your-image-source.jpg" alt="Spinning and Bouncing Image">
   <script>
-    // You can optionally add JavaScript to dynamically change image source, size, etc.
+    document.addEventListener("DOMContentLoaded", function() {
+      const movingImage = document.getElementById("movingImage");
+
+      // Set initial random position within the visible window area
+      const initialX = Math.random() * (window.innerWidth - movingImage.width);
+      const initialY = Math.random() * (window.innerHeight - movingImage.height);
+
+      movingImage.style.left = initialX + "px";
+      movingImage.style.top = initialY + "px";
+    });
   </script>
+
+  <img id="movingImage" src="your-image-source.jpg" alt="Spinning and Bouncing Image">
 </body>
 </html>
