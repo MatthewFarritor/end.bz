@@ -48,8 +48,8 @@
           deltaY *= -1;
         }
 
-        // Apply new position
-        movingImage.style.transform = `translate(${currentX}px, ${currentY}px)`;
+        // Apply new position and rotation
+        movingImage.style.transform = `translate(${currentX}px, ${currentY}px) rotate(360deg)`;
 
         // Repeat the process with requestAnimationFrame for smooth animation
         requestAnimationFrame(moveImage);
@@ -58,6 +58,6 @@
   </script>
 
   <!-- Set width and height attributes for the image -->
-  <img id="movingImage" src="ENDFACE.png" alt="Bouncing Image" width="100" height="100">
+  <img id="movingImage" src="your-image-source.jpg" alt="Spinning and Bouncing Image" width="100" height="100">
 </body>
 </html>
