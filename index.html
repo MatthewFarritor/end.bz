@@ -1,63 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      overflow: hidden;
-      margin: 0;
-      padding: 0;
-    }
-
-    #movingImage {
-      position: absolute;
-      transition: transform 1s ease-out;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bouncing Images</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #fff;
+        }
+        .bouncing-image {
+            position: absolute;
+            width: 100px;
+            height: auto;
+        }
+    </style>
 </head>
 <body>
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const movingImage = document.getElementById("movingImage");
-      const imageWidth = movingImage.width;
-      const imageHeight = movingImage.height;
+    <script>
+        const images = [];
+        const imageSets = [
+            [
+                '11.png',
+                '22.png',
+                '33.png',
+                '44.png',
+                '55.png',
+                '66.png'
+            ],
+            [
+                '11b.png',
+                '22b.png',
+                '33b.png'
+            ],
+            [
+                '11a.jpg',
+                '22a.jpg',
+                '33a.jpg',
+                '44a.jpg',
+                '55a.jpg',
+                '66a.jpg',
+                '77a.jpg'
+            ],
+            [
+                'ENDFACE.png'
+            ]
+        ];
 
-      // Set initial random position within the visible window area
-      let currentX = Math.random() * (window.innerWidth - imageWidth);
-      let currentY = Math.random() * (window.innerHeight - imageHeight);
+        function createImage(index) {
+            const img = document.createElement('img');
+            img.src = imageSets[index][0];
+            img.className = 'bouncing-image';
+            document.body.appendChild(img);
 
-      // Set initial random direction
-      let deltaX = Math.random() > 0.5 ? 1 : -1;
-      let deltaY = Math.random() > 0.5 ? 1 : -1;
+            const imageObj = {
+                element: img,
+                x: Math.random() * (window.innerWidth - 100),
+                y: Math.random() * (window.innerHeight - 100),
+                xSpeed: (Math.random() - 0.5) * 4,
+                ySpeed: (Math.random() - 0.5) * 4,
+                imageSetIndex: index,
+                currentImageIndex: 0
+            };
 
-      const speed = 2; // Adjust this value to control the speed
-
-      moveImage();
-
-      function moveImage() {
-        // Update position based on current direction and speed
-        currentX += deltaX * speed;
-        currentY += deltaY * speed;
-
-        // Check for collisions with window edges and reverse direction
-        if (currentX < 0 || currentX + imageWidth > window.innerWidth) {
-          deltaX *= -1;
+            images.push(imageObj);
         }
-        if (currentY < 0 || currentY + imageHeight > window.innerHeight) {
-          deltaY *= -1;
+
+        function changeImage(img) {
+            img.currentImageIndex = (img.currentImageIndex + 1) % imageSets[img.imageSetIndex].length;
+            img.element.src = imageSets[img.imageSetIndex][img.currentImageIndex];
         }
 
-        // Apply new position
-        movingImage.style.transform = `translate(${currentX}px, ${currentY}px)`;
+        function animate() {
+            const maxX = window.innerWidth - 100;
+            const maxY = window.innerHeight - 100;
 
-        // Repeat the process with requestAnimationFrame for smooth animation
-        requestAnimationFrame(moveImage);
-      }
-    });
-  </script>
+            images.forEach(img => {
+                img.x += img.xSpeed;
+                img.y += img.ySpeed;
 
-  <!-- Set width and height attributes for the image -->
-  <img id="movingImage" src="ENDFACE.png" alt="Bouncing Image" width="100" height="100">
+                let collision = false;
+
+                if (img.x <= 0 || img.x >= maxX) {
+                    img.xSpeed = -img.xSpeed;
+                    img.x = Math.max(0, Math.min(img.x, maxX));
+                    collision = true;
+                }
+
+                if (img.y <= 0 || img.y >= maxY) {
+                    img.ySpeed = -img.ySpeed;
+                    img.y = Math.max(0, Math.min(img.y, maxY));
+                    collision = true;
+                }
+
+                img.element.style.left = img.x + 'px';
+                img.element.style.top = img.y + 'px';
+
+                if (collision) {
+                    changeImage(img);
+                }
+            });
+
+            // Check for collisions between images
+            for (let i = 0; i < images.length; i++) {
+                for (let j = i + 1; j < images.length; j++) {
+                    if (checkCollision(images[i], images[j])) {
+                        // Swap velocities for a simple bounce effect
+                        [images[i].xSpeed, images[j].xSpeed] = [images[j].xSpeed, images[i].xSpeed];
+                        [images[i].ySpeed, images[j].ySpeed] = [images[j].ySpeed, images[i].ySpeed];
+                        
+                        // Change both images
+                        changeImage(images[i]);
+                        changeImage(images[j]);
+                    }
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        function checkCollision(img1, img2) {
+            return (
+                img1.x < img2.x + 100 &&
+                img1.x + 100 > img2.x &&
+                img1.y < img2.y + 100 &&
+                img1.y + 100 > img2.y
+            );
+        }
+
+        // Create all 4 images
+        for (let i = 0; i < 4; i++) {
+            createImage(i);
+        }
+        animate();
+    </script>
 </body>
 </html>
